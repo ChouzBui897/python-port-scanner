@@ -4,15 +4,20 @@ def print_console(results):
     """
     In kết quả quét đẹp mắt ra màn hình.
     """
-    print("\n" + "="*50)
-    print(f"{'IP Address':<15} | {'Port':<7} | {'Status':<10} | {'Service/Banner'}")
-    print("-" * 50)
+    print("\n" + "="*80)
+    print(f"{'IP Address':<15} | {'Port':<7} | {'Status':<8} | {'Service':<15} | {'Banner'}")
+    print("-" * 80)
     
     for host, host_results in results.items():
         for p_res in host_results:
-            banner = p_res.get('banner', 'N/A')
-            print(f"{host:<15} | {p_res['port']:<7} | {p_res['status']:<10} | {banner}")
-    print("="*50 + "\n")
+            # Sử dụng .get() kèm giá trị mặc định để tránh lỗi KeyError
+            port = p_res.get('port', 'N/A')
+            status = p_res.get('status', 'N/A')
+            service = p_res.get('service', 'unknown')
+            banner = p_res.get('banner', 'Unknown')
+            
+            print(f"{host:<15} | {port:<7} | {status:<8} | {service:<15} | {banner}")
+    print("="*80 + "\n")
 
 def save_json(results, filename):
     """
@@ -21,6 +26,6 @@ def save_json(results, filename):
     try:
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(results, f, indent=4, ensure_ascii=False)
-        print(f"[+] Kết quả đã được lưu tại: {filename}")
+        print(f"[+] Kết quả JSON hoàn chỉnh đã được lưu tại: {filename}")
     except Exception as e:
         print(f"[-] Lỗi khi lưu file JSON: {e}")

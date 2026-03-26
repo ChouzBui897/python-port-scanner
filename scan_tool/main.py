@@ -25,12 +25,15 @@ def scan_task(ip, port, scan_type, timeout):
     else:
         status = scanning_engine.connect_scan(ip, port, timeout)
     
-    result = {"port": port, "status": status}
+    # Khởi tạo result mặc định
+    result = {"port": port, "status": status, "service": "unknown", "banner": "N/A"}
     
     # Nếu cổng mở, tiến hành nhận diện dịch vụ (Banner Grabbing)
     if status == "open":
-        banner = service_detector.grab_banner(ip, port, timeout)
-        result["banner"] = banner
+        # Hứng cả 2 giá trị từ module service_detector đã sửa
+        service_name, banner_info = service_detector.grab_banner(ip, port, timeout)
+        result["service"] = service_name
+        result["banner"] = banner_info
     
     return ip, result
 
