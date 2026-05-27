@@ -70,37 +70,94 @@ pip install -r requirements.txt
 
 ## Usage
 
-### TCP Connect Scan
+### Basic Scan
 
 ```bash
-python scanner.py -t 192.168.1.1 -sT
-```
-
-### TCP SYN Scan
-
-```bash
-python scanner.py -t 192.168.1.1 -sS
-```
-
-### Export JSON Result
-
-```bash
-python scanner.py -t 192.168.1.1 -json
+python main.py -t 192.168.1.1
 ```
 
 ---
+
+### TCP Connect Scan
+
+```bash
+python main.py -t 192.168.1.1 -p 1-1000 -sT
+```
+
+---
+
+### TCP SYN Scan
+
+> Requires administrator/root privileges
+
+```bash
+sudo python main.py -t 192.168.1.1 -p 1-1000 -sS
+```
+
+---
+
+### Multi-threaded Scan
+
+```bash
+python main.py -t 192.168.1.1 --threads 100
+```
+
+---
+
+### Custom Timeout
+
+```bash
+python main.py -t 192.168.1.1 --timeout 2
+```
+
+---
+
+### Export Results to JSON
+
+```bash
+python main.py -t 192.168.1.1 -oJ results.json
+```
+
+---
+
+## Command Arguments
+
+| Argument | Description |
+|---|---|
+| `-t`, `--target` | Target IP, CIDR, or file containing targets |
+| `-p`, `--ports` | Port range or specific ports |
+| `--threads` | Number of concurrent threads |
+| `--timeout` | Connection timeout |
+| `-sS` | TCP SYN Scan |
+| `-sT` | TCP Connect Scan |
+| `-oJ` | Export results to JSON |
+
+---
+
+## Example
+
+```bash
+sudo python main.py -t 192.168.1.1 -p 1-1000 -sS -oJ results.json
+```
 
 ## Output Example
 
 ```json
 {
-  "target": "192.168.1.1",
-  "open_ports": [
-    {
-      "port": 80,
-      "service": "HTTP"
-    }
-  ]
+    "192.168.1.1": [
+        {
+            "port": 22,
+            "status": "open",
+            "service": "ssh",
+            "banner": "OpenSSH 8.2"
+        },
+        {
+            "port": 80,
+            "status": "open",
+            "service": "http",
+            "banner": "Apache/2.4.41"
+        }
+    ]
 }
 ```
 
